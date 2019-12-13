@@ -9,7 +9,7 @@
  ***************************************************************
  */
 
-package jdbc;
+package problem.DDEnter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
