@@ -107,8 +107,7 @@ public class MemberDTO {
 	// 3. getter(), setter()
 	@Override
 	public String toString() { // 값이 잘 담겨있나 확인하는 용도
-		return "MemberDTO [ano=" + ano + ", aname=" + aname + ", major=" + major + ", groupyn=" + groupyn + ", groupnm="
-				+ groupnm + ", sal=" + sal + ", regdate=" + regdate + "]";
+		return  ano + "\t" + aname + "\t" + major + "\t" + groupyn + "\t" + groupnm + "\t" + sal + "\t" + regdate;
 	}
 
 }

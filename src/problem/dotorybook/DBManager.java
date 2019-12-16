@@ -9,7 +9,7 @@
  ***************************************************************
  */
 
-package problem.DDEnter;
+package problem.dotorybook;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

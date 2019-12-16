@@ -33,12 +33,6 @@ public class jdbcEx04 {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-				
-		} finally {
-				
-			}
-		
+		}
 	}
-
-	
 }
