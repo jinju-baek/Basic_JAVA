@@ -131,7 +131,8 @@ public class BookDAO {
 		try {
 			conn = DBManager.getConnection();
 
-			String sql = "SELECT * FROM tbl_book " + "WHERE bname LIKE ?";
+			String sql = "SELECT * FROM tbl_book " 
+					   + "WHERE bname LIKE ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%" + bname + "%");
 
