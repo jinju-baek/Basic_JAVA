@@ -34,6 +34,8 @@ public class BookDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
+				rs.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -63,6 +65,7 @@ public class BookDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -87,6 +90,7 @@ public class BookDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -119,7 +123,9 @@ public class BookDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-
+				conn.close();
+				pstmt.close();
+				rs.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -160,6 +166,8 @@ public class BookDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
+				rs.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}

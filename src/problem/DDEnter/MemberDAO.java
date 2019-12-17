@@ -10,7 +10,9 @@ import java.util.ArrayList;
 public class MemberDAO {
 	Connection conn;
 	PreparedStatement pstmt;
+	ResultSet rs;
 	ArrayList<MemberDTO> list = new ArrayList<>();
+	
 	
 	public void memInsert(MemberDTO mDto) { // 1. 아티스트 등록
 		try {
@@ -33,7 +35,12 @@ public class MemberDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-
+			try {
+				conn.close();
+				pstmt.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
 		}
 	}
 
@@ -73,6 +80,7 @@ public class MemberDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -101,6 +109,7 @@ public class MemberDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -117,7 +126,7 @@ public class MemberDAO {
 			
 			// 4. SQL실행
 			// ResultSet = SELECT문에 결과를 담음(DB전용)
-			ResultSet rs = pstmt.executeQuery(); // SELECT문
+			rs = pstmt.executeQuery(); // SELECT문
 			
 			while(rs.next()) { // 한 줄씩 읽다가 값이 있을경우 결과값을 true로 반환
 				String ano = rs.getString("ano"); // ""안의 값은 DB의 컬럼명이랑 똑같이 써야 함
@@ -143,6 +152,8 @@ public class MemberDAO {
 		} finally {
 			try {
 				conn.close();
+				pstmt.close();
+				rs.close();				
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -156,7 +167,7 @@ public class MemberDAO {
 					   + "WHERE aname LIKE ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%" + aname + "%");
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			rs.next();
 			System.out.println(rs.getString("ano") + "\t" + rs.getString("aname") + "\t" + rs.getString("major") 
 								+ "\t" + rs.getString("groupyn") + "\t" + rs.getString("groupnm") 
@@ -166,6 +177,8 @@ public class MemberDAO {
 		}finally {
 			try {
 				conn.close();
+				pstmt.close();
+				rs.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
