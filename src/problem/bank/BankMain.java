@@ -13,11 +13,13 @@ public class BankMain {
 			System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 			System.out.println("■■ 허쉬 은행");
 			System.out.println("■■ 1. 계좌 개설");
-			System.out.println("■■ 2. 입금");
-			System.out.println("■■ 3. 출금");
-			System.out.println("■■ 4. 계좌조회");
-			System.out.println("■■ 5. 사용자 검색");
-			System.out.println("■■ 6. 프로그램 종료");
+			System.out.println("■■ 2. 계좌 해지");
+			System.out.println("■■ 3. 입금");
+			System.out.println("■■ 4. 출금");
+			System.out.println("■■ 5. 고객조회");
+			System.out.println("■■ 6. 계좌조회");
+			System.out.println("■■ 7. 사용자 검색");
+			System.out.println("■■ 8. 프로그램 종료");
 			System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 			// 1. 프로그램 전체 반복
 			// 2. 1 ~ 6번까지 번호만 허용(나머지는 무한반복 다시 입력)
@@ -35,18 +37,29 @@ public class BankMain {
 					continue;
 				}
 			}
+			
 			if (code == 1) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 				System.out.println("■■ 개설하실 계좌의 정보를 입력해주세요.");
-				System.out.print("■■ 예금주 >> ");
+				System.out.print("■■ 계좌주 >> ");
 				sc.nextLine();
 				String bname = sc.nextLine();
 				System.out.print("■■ 계좌 비밀번호 >> ");
 				String pw = sc.nextLine();
 				
-				bDao.bankInsert(bname, pw);
+				bDao.insertBank(bname, pw);
 				
-			} else if (code == 2) {
+			} else if(code == 2) {
+				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+				System.out.println("■■ 삭제하실 계좌의 정보를 입력해주세요.");
+				System.out.print("■■ 계좌번호 >> ");
+				int bno = sc.nextInt();
+				System.out.print("■■ 비밀번호 >> ");
+				sc.nextLine();
+				String pw = sc.nextLine();
+				bDao.deleteBank(bno, pw);
+				
+			} else if (code == 3) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 				System.out.println("■■ 입금하실 계좌의 번호를 입력해주세요");
 				System.out.print("■■ 계좌번호 >> ");
@@ -55,9 +68,9 @@ public class BankMain {
 				System.out.print("■■ 입금금액 >> ");
 				int money = sc.nextInt();
 				
-				bDao.bankDep(bno, money);
+				bDao.updateMoney(bno, money);
 				
-			} else if (code == 3) {
+			} else if (code == 4) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 				System.out.println("■■ 인출하실 계좌의 번호를 입력해주세요");
 				System.out.print("■■ 계좌번호 >> ");
@@ -91,11 +104,23 @@ public class BankMain {
 					System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 					System.out.println("금액이 부족합니다.");
 				}
-			} else if (code == 4) {
-				
+			} else if (code == 5) {
 				bDao.bankSelect();
 				
-			} else if (code == 5) {
+			} else if (code == 6) {
+				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+				System.out.println("■■ 계좌를 조회합니다. 계좌번호와 비밀번호를 입력해주세요");
+				System.out.print("■■ 계좌번호 >> ");
+				int bno = sc.nextInt();
+				System.out.print("■■ 비밀번호 >> ");
+				sc.nextLine();
+				String pw = sc.nextLine();
+				
+				bDao.selectAccount(bno, pw);
+				
+				
+				
+			} else if (code == 7) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 				System.out.println("■■ 검색하실 예금주 키워드를 입력해주세요.");
 				System.out.print("키워드 >> ");
@@ -104,7 +129,7 @@ public class BankMain {
 				
 				bDao.bankSearch(keyword);
 				
-			} else if (code == 6) {
+			} else if (code == 8) {
 				System.exit(0);
 			}
 		}
