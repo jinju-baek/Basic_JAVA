@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -29,14 +30,15 @@ public class BankDAO {
 	BankDTO bDto;		
 	int result = 0;
 
-	public void insertBank(String bname, String pw) {
+	// 계좌 개설
+	public void insertBank(String bname, String pw) { 
 		sqlSession = sqlSessionFactory.openSession(true);// true = 자동커밋, 안해주면 sqlSession.commit();일일이 쳐줘야 함(insert,update,delete)
 	
 		try {
 			BankDTO bDto = new BankDTO(bname, pw);
 			result = sqlSession.insert("insertBank", bDto);
 			// sqlSession.commit();
-			if(result == 1) {
+			if(result > 0) {
 				System.out.println("■■ " + bname + "님 신규계좌를 개설하였습니다.");
 			} else {
 				System.out.println("■■ 계좌개설에 실패하였습니다. 관리자에게 문의해주세요.");
@@ -48,13 +50,20 @@ public class BankDAO {
 		}
 	}
 	
+	// 계좌 해지
 	public void deleteBank(int bno, String pw) {
 		sqlSession = sqlSessionFactory.openSession(true);
 		try {
-			BankDTO bDto = new BankDTO(bno, pw);
-			result = sqlSession.delete("deleteBank", bDto);
+			// "bno", bno
+			// "pw", pw
+			HashMap<String, Object> map = new HashMap<>(); 
+			map.put("bno", bno);
+			map.put("pw", pw);
 			
-			if(result == 1) {
+			result = sqlSession.delete("deleteBank", map);
+		
+			
+			if(result > 0) {
 				System.out.println("■■ " + bno + "계좌를 삭제하였습니다.");
 			}else {
 				System.out.println("■■ 계좌삭제에 실패하였습니다. 관리자에게 문의해주세요.");
@@ -67,14 +76,19 @@ public class BankDAO {
 		
 	}
 	
-	public void updateMoney(int bno, int money) {
+	// 계좌 입금
+	public void plusMoney(int bno, int money) {
 		sqlSession = sqlSessionFactory.openSession(true);
 		try {
-			BankDTO bDto = new BankDTO(bno, money);
-			result = sqlSession.update("updateMoney", bDto);
+			HashMap<String, Integer> map = new HashMap<>(); // 제네릭 안에는 객체자료형밖에 못 옴 | Int >> Integer(Wrapper Class)
+			map.put("bno", bno);
+			map.put("money", money);
+			map.put("flag", 1);
+			result = sqlSession.update("changeMoney", map);
 			
-			if(result == 1) {
-				System.out.println("■■ " + bno + "계좌에 " + money + "원을 입금하였습니다.");
+			
+			if(result > 0) {
+				System.out.println("■■ 현재 계좌 잔액은 " + balanceMoney(bno) + " 입니다.");
 			} else {
 				System.out.println("■■ 계좌입금에 실패하였습니다. 관리자에게 문의해주세요.");
 			}
@@ -85,95 +99,50 @@ public class BankDAO {
 		}
 	}
 
-
-	public int bankCheck(int bno, String pw) {
+	// 사용자 유무 확인
+	public boolean checkUser(int bno, String pw) {
+		boolean flag = true;
+		sqlSession = sqlSessionFactory.openSession();
 		try {
-			conn = DBManager.getConnection();
-			String sql = "SELECT * FROM tbl_bank "
-					+ "WHERE bno = ? AND pw = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bno);
-			pstmt.setString(2, pw);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				result++; 
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-				pstmt.close();
-				rs.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	public int moneyCheck(int bno, int dept) {
-		int money = 0;
-		try {
-			conn = DBManager.getConnection();
-			String sql = "SELECT money FROM tbl_bank "
-					+ "WHERE bno = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bno);
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				money = rs.getInt("money");
-			}
-			if(money >= dept) {
-				result = 1;
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("bno", bno);
+			map.put("pw", pw);
+			int result = sqlSession.selectOne("checkUser", map);
+			if(result > 0) {
+				flag = true;
 			} else {
-				result = 0;
+				flag = false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				conn.close();
-				pstmt.close();
-				rs.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
+			sqlSession.close();
 		}
-		return result;
+		return flag;
 	}
 	
-	public void bankWithDraw(int bno, int dept) {
+	public void minusBank(int bno, int money) {
+		sqlSession = sqlSessionFactory.openSession(true);
 		try {
-			conn = DBManager.getConnection();
-			String sql = "UPDATE tbl_bank "
-					   + "SET money = money - ? "
-					   + "WHERE bno = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, dept);
-			pstmt.setInt(2, bno);
+			HashMap<String, Integer> map = new HashMap<>();
+			map.put("bno", bno);
+			map.put("money", money);
+			map.put("flag", 0);
+			int result = sqlSession.update("changeMoney", map);
 			
-			int result = pstmt.executeUpdate();
-			if (result > 0) {
-				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-				System.out.println(dept+"원 출금되셨습니다.");
+			if(result > 0) {
+				System.out.println("■■ " + money + "원 출금에 성공하였습니다. 현재 계좌 잔액은 "+ balanceMoney(bno) + "입니다.");
 			} else {
-				System.out.println("출금 실패!! 관리자에게 문의해주세요.");
+				System.out.println("■■ 출금에 실패하였습니다. 관리자에게 문의해주세요.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				conn.close();
-				pstmt.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
+			sqlSession.close();
 		}
 	}
-	
+		
+	// 고객 조회
 	public void bankSelect() {
 		sqlSession = sqlSessionFactory.openSession();
 		
@@ -188,10 +157,11 @@ public class BankDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-				sqlSession.close();
+			sqlSession.close();
 		}
 	}
 	
+	// 계좌 금액 조회
 	public void selectAccount(int bno, String pw) {
 		sqlSession = sqlSessionFactory.openSession();
 		try {
@@ -211,40 +181,23 @@ public class BankDAO {
 		}
 	}
 
-	public void bankSearch(String keyword) {
+	// 사용자 검색
+	public void searchBank(String keyword) {
+
+	}
+	
+	// 계좌 잔액 조회
+	public int balanceMoney(int bno) {
+		sqlSession = sqlSessionFactory.openSession();
+		int money = 0;
 		try {
-			conn = DBManager.getConnection();
-			String sql = "SELECT * FROM tbl_bank "
-					   + "WHERE bname LIKE ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, "%" + keyword + "%");
-			
-			rs = pstmt.executeQuery();
-			list.clear();
-			while(rs.next()) {
-				int bno = rs.getInt("bno");
-				String bname = rs.getString("bname");
-				String pw = rs.getString("pw");
-				int money = rs.getInt("money");
-				Date regdate = rs.getDate("regdate");
-				
-				bDto = new BankDTO(bno, bname, pw, money, regdate);
-				list.add(bDto);
-			}
-			System.out.println("\"" + keyword + "\"으로 검색한 결과 "+list.size()+"건이 나왔습니다.");
-			printQuery(list);
+			money = sqlSession.selectOne("balanceMoney", bno);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				conn.close();
-				pstmt.close();
-				rs.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
+			sqlSession.close();
 		}
-		
+		return money;
 	}
 	
 	public void printQuery(ArrayList<BankDTO> list) {
@@ -253,6 +206,8 @@ public class BankDAO {
 			System.out.println(line.getBno() + "\t" + line.getBname() + "\t" + line.getPw() + "\t" + line.getMoney() + "\t" + line.getRegdate());
 		}
 	}
+
+
 
 
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.BankMapper.XML">
+	<select id="selBank" resultType="problem.bank.BankDTO">
+		SELECT * FROM tbl_bank
+		ORDER BY bno 
+	</select>
+	
+	<select id="selectAccount" resultType="problem.bank.BankDTO"> 
+		SELECT * FROM tbl_bank
+		WHERE bno = #{bno} AND pw = #{pw} 
+	</select>
+	
+	<insert id="insertBank" parameterType="problem.bank.BankDTO">
+		INSERT INTO tbl_bank(bno, bname, pw)
+		VALUES(seq_bank.NEXTVAL, #{bname}, #{pw})	
+	</insert>
+	
+	<update id="plusMoney" parameterType="map">
+		UPDATE tbl_bank
+		SET money = money + #{money} 
+		WHERE bno = #{bno}
+	</update>
+	
+	<update id="minusBank" parameterType="map">
+		UPDATE tbl_bank 
+		SET money = money - #{money}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 동적쿼리 -->
+	<update id="changeMoney" parameterType="map">
+		UPDATE tbl_bank SET
+		<if test="flag==1"> 
+			money = money + #{money}
+		</if>
+		<if test="flag==0"> 
+			money = money - #{money}
+		</if>
+		WHERE bno = #{bno}
+	</update>
+	
+	<delete id="deleteBank" parameterType="map">
+		DELETE FROM tbl_bank
+		WHERE bno = #{bno} AND pw = #{pw}
+	</delete>
+
+	<select id="balanceMoney" resultType="Integer">
+		SELECT money FROM tbl_bank
+		WHERE bno = #{bno}
+	</select>
+
+	<select id="checkUser" resultType="Integer">
+		SELECT count(*) FROM tbl_bank
+		WHERE bno = #{bno} AND pw = #{pw}
+	</select>
+	
+	
+
+	
+	
+	
+</mapper>

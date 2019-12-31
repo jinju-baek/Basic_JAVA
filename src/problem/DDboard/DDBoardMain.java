@@ -12,7 +12,7 @@ public class DDBoardMain {
 			System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
 			System.out.println("▨▧ 더블디 게시판");
 			System.out.println("☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜☜");
-			bDao.BoardSelect();
+			bDao.boardSelect();
 			System.out.println("☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞☞");
 			System.out.println("▨▧ 1. 게시글 등록");
 			System.out.println("▨▧ 2. 게시글 수정");
@@ -47,8 +47,7 @@ public class DDBoardMain {
 				System.out.print("▨▧ 작성자 >> ");
 				String writer = sc.nextLine();
 				
-				BoardDTO bDto = new BoardDTO(title, content, writer);
-				bDao.BoardInsert(bDto);
+				bDao.boardInsert(title, content, writer);
 				
 			}else if(code == 2) {
 				System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
@@ -64,19 +63,18 @@ public class DDBoardMain {
 				System.out.print("▨▧ 작성자 >> ");
 				String writer = sc.nextLine();
 				
-				BoardDTO bDto = new BoardDTO(bno, title, content, writer);
-				bDao.BoardUpdate(bDto);
+				bDao.boardUpdate(bno, title, content, writer);
 				
 			}else if(code == 3) {
 				System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
 				System.out.println("▨▧ 삭제하실 게시글의 번호를 입력해주세요.");
 				System.out.print("▨▧ 번호 >> ");
 				int bno = sc.nextInt();
-				bDao.BoardDelete(bno);
+				bDao.boardDelete(bno);
 			
 				
 			}else if(code == 4) {
-				bDao.BoardSelect();
+				bDao.boardSelect();
 				
 			}else if(code == 5) {
 				System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
@@ -84,14 +82,17 @@ public class DDBoardMain {
 				System.out.print("▨▧ 제목 >> ");
 				sc.nextLine();
 				String title = sc.nextLine();
-				bDao.BoardSearch(title);
+				bDao.boardSearch(title);
 				
 			}else if(code == 6) {
-				
-				bDao.BoardSort();
+				bDao.boardSort();
 				
 			}else if(code == 7) {
-				bDao.BoardView();
+				System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
+				System.out.println("▨▧ 보실 게시글의 번호를 입력해주세요");
+				System.out.print("▨▧ 번호 >> ");
+				int bno = sc.nextInt();
+				bDao.boardView(bno);
 				
 			}else if(code == 8) {
 				System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");

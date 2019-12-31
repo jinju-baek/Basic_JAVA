@@ -17,7 +17,7 @@ public class BankMain {
 			System.out.println("■■ 3. 입금");
 			System.out.println("■■ 4. 출금");
 			System.out.println("■■ 5. 고객조회");
-			System.out.println("■■ 6. 계좌조회");
+			System.out.println("■■ 6. 계좌 잔액조회");
 			System.out.println("■■ 7. 사용자 검색");
 			System.out.println("■■ 8. 프로그램 종료");
 			System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -68,42 +68,38 @@ public class BankMain {
 				System.out.print("■■ 입금금액 >> ");
 				int money = sc.nextInt();
 				
-				bDao.updateMoney(bno, money);
+				bDao.plusMoney(bno, money);
 				
 			} else if (code == 4) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-				System.out.println("■■ 인출하실 계좌의 번호를 입력해주세요");
+				System.out.println("■■ 출금하실 계좌의 정보를 입력해주세요");
 				System.out.print("■■ 계좌번호 >> ");
 				int bno = sc.nextInt();
-				System.out.println("■■ 비밀번호를 입력해주세요");
 				System.out.print("■■ 비밀번호 >> ");
 				sc.nextLine();
 				String pw = sc.nextLine();
-				while(true) {
-					int result = bDao.bankCheck(bno, pw);
-					if(!(result > 0)) {
-						System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-						System.out.println("■■ 없는 계좌이거나, 비밀번호가 틀렸습니다. 다시 입력해주세요.");
-						System.out.print("■■ 계좌번호 >> ");
-						bno = sc.nextInt();
-						System.out.println("■■ 비밀번호를 입력해주세요");
-						sc.nextLine();
-						System.out.print("■■ 비밀번호 >> ");
-						pw = sc.nextLine();
-					} else {
-						break;
-					}
-				}
-				System.out.println("■■ 인출하실 금액을 입력해주세요");
-				System.out.print("■■ 금액 >> ");
-				int dept = sc.nextInt();
-				int result = bDao.moneyCheck(bno, dept);
-				if (result > 0) {
-					bDao.bankWithDraw(bno, dept);
-				} else {				
+				
+				if(bDao.checkUser(bno, pw)) {
+					while(true) {
 					System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-					System.out.println("금액이 부족합니다.");
+					System.out.println("■■ 현재 잔액은 " + bDao.balanceMoney(bno) + "입니다.");
+					System.out.println("■■ 출금하실 금액을 입력해주세요.");
+					System.out.print("■■ 금액 >> ");
+					int money = sc.nextInt();
+						if(bDao.balanceMoney(bno) >= money) {
+							
+							bDao.minusBank(bno, money);
+							
+							break;
+						} else {
+							System.out.println("■■ 현재 잔액보다 큰 금액입니다. 다시 입력해주세요.");
+							continue;
+						}
+					}
+				} else {
+					System.out.println("■■ 없는 사용자이거나 비밀번호가 틀립니다.");
 				}
+			
 			} else if (code == 5) {
 				bDao.bankSelect();
 				
@@ -118,8 +114,6 @@ public class BankMain {
 				
 				bDao.selectAccount(bno, pw);
 				
-				
-				
 			} else if (code == 7) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 				System.out.println("■■ 검색하실 예금주 키워드를 입력해주세요.");
@@ -127,7 +121,7 @@ public class BankMain {
 				sc.nextLine();
 				String keyword = sc.nextLine();
 				
-				bDao.bankSearch(keyword);
+				bDao.searchBank(keyword);
 				
 			} else if (code == 8) {
 				System.exit(0);

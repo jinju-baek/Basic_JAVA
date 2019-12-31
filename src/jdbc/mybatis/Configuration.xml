@@ -18,6 +18,7 @@
     </environment>
   </environments>
   <mappers>
+    <mapper resource="jdbc/mybatis/BankMapper.xml"/>
     <mapper resource="jdbc/mybatis/BoardMapper.xml"/>
   </mappers>
 </configuration>
