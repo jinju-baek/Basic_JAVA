@@ -46,6 +46,8 @@ public class BoardDTO {
 		this.viewcnt = viewcnt;
 	}
 
+	
+	
 	public int getBno() {
 		return bno;
 	}

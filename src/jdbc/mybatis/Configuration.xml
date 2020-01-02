@@ -20,5 +20,6 @@
   <mappers>
     <mapper resource="jdbc/mybatis/BankMapper.xml"/>
     <mapper resource="jdbc/mybatis/BoardMapper.xml"/>
+    <mapper resource="jdbc/mybatis/MemberMapper.xml"/>
   </mappers>
 </configuration>

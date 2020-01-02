@@ -25,12 +25,11 @@ public class BoardDAO {
 	// 게시글 등록
 	public void boardInsert(String title, String content, String writer) {
 		sqlSession = sqlSessionFactory.openSession(true);
-
+		HashMap<String, String> map = new HashMap<>();
+		map.put("title", title);
+		map.put("content", content);
+		map.put("writer", writer);
 		try {
-			HashMap<String, String> map = new HashMap<>();
-			map.put("title", title);
-			map.put("content", content);
-			map.put("writer", writer);
 			int result = sqlSession.insert("boardInsert", map);
 			if(result > 0) {
 				System.out.println("▨▧ 게시글 등록에 성공하였습니다. ");
@@ -47,12 +46,12 @@ public class BoardDAO {
 	// 게시글 수정
 	public void boardUpdate(int bno, String title, String content, String writer) {	
 		sqlSession = sqlSessionFactory.openSession(true);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("bno", bno);
+		map.put("title", title);
+		map.put("content", content);
+		map.put("writer", writer);
 		try {
-			HashMap<String, Object> map = new HashMap<>();
-			map.put("bno", bno);
-			map.put("title", title);
-			map.put("content", content);
-			map.put("writer", writer);
 			int result = sqlSession.update("boardUpdate", map);
 			if(result > 0) {
 				System.out.println("▨▧ 게시글 수정에 성공하였습니다.");
@@ -90,11 +89,7 @@ public class BoardDAO {
 		sqlSession = sqlSessionFactory.openSession();
 		try {
 			list = sqlSession.selectList("boardSelect");
-			System.out.println("번호\t제목\t내용\t작성자\t작성일");
-			for(BoardDTO line : list) {
-				System.out.println(line.getBno() + "\t" + line.getTitle() + "\t" + line.getContent() + "\t" 
-			+ line.getWriter() + "\t" + line.getRegdate());
-			}
+			boardPrint(list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -106,13 +101,9 @@ public class BoardDAO {
 	public void boardSearch(String title) {
 		sqlSession = sqlSessionFactory.openSession();
 		try {
-			
 			list = sqlSession.selectList("boardSearch", title);
-			System.out.println("번호\t제목\t내용\t작성자\t작성일");
-			for(BoardDTO line : list) {
-				System.out.println(line.getBno() + "\t" + line.getTitle() + "\t" + line.getContent() 
-				+ "\t" + line.getWriter() + "\t" + line.getRegdate());
-			}
+			System.out.println("▨▧ " + title + "(으)로 검색한 결과 총 " + list.size() + "건이 나왔습니다.");
+			boardPrint(list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -124,12 +115,7 @@ public class BoardDAO {
 		sqlSession = sqlSessionFactory.openSession();
 		try {
 			list = sqlSession.selectList("boardSort");
-			System.out.println("번호\t제목\t내용\t작성자\t조회수\t작성일");
-			for(BoardDTO line : list) {
-				System.out.println(line.getBno() + "\t" + line.getTitle() + "\t" + line.getContent() + "\t" + line.getWriter()
-				 + "\t" + line.getViewcnt() + "\t" + line.getRegdate());
-			}
-			
+			boardPrint(list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -137,6 +123,7 @@ public class BoardDAO {
 		}
 	}
 	
+	// 상세 게시글
 	public void boardView(int bno) {
 		sqlSession = sqlSessionFactory.openSession();
 		try {
@@ -150,7 +137,6 @@ public class BoardDAO {
 				System.out.println("조회수 : " + line.getViewcnt());
 				System.out.println("작성일 : " + line.getRegdate());
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -158,15 +144,35 @@ public class BoardDAO {
 		}
 	}
 	
+	// 조회수 증가
 	public void viewcntPlus(int bno) {
 		sqlSession = sqlSessionFactory.openSession(true);
 		try {
-			sqlSession.update("viewcntPlus");
+			sqlSession.update("viewcntPlus", bno);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			sqlSession.close();
 		}
+	}
+	
+	// 게시글 출력문
+	public void boardPrint(List<BoardDTO> list) {
+		System.out.println("번호\t제목\t내용\t작성자\t조회수\t작성일");
+		for(BoardDTO line : list) {
+			System.out.println(line.getBno() + "\t" + line.getTitle() + "\t" + line.getContent() + "\t" + line.getWriter()
+			 + "\t" + line.getViewcnt() + "\t" + line.getRegdate());
+		}
+	}
+
+	// id 체크
+	public String getWriter(int bno) {
+		sqlSession = sqlSessionFactory.openSession();
+		String writer = "";
+		try {
+			writer = sqlSession.selectOne("board.getWriter", bno);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return writer;
 	}
 
 }
