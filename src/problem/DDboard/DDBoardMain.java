@@ -27,7 +27,8 @@ public class DDBoardMain {
 			System.out.println("▨▧ 7. 게시글 정렬");
 			System.out.println("▨▧ 8. 상세 게시글");
 			System.out.println("▨▧ 9. 만든이");
-			System.out.println("▨▧ 10. 게시글 종료");
+			System.out.println("▨▧ 10. 로그아웃");
+			System.out.println("▨▧ 11. 게시글 종료");
 			if(session.equals("YES")) {
 				System.out.println("▨▧ \"" + DDBoardMain.userid + "\"님 재방문을 환영합니다.");
 			}
@@ -37,10 +38,10 @@ public class DDBoardMain {
 			while (true) {
 				System.out.print("▨▧ 번호 >> ");
 				code = sc.nextInt();
-				if (code >= 1 && code <= 10) {
+				if (code >= 1 && code <= 11) {
 					break;
 				} else {
-					System.out.println("▨▧ 1 ~ 10 중 다시 입력해주세요.");
+					System.out.println("▨▧ 1 ~ 11 중 다시 입력해주세요.");
 					continue;
 				}
 			}
@@ -135,7 +136,19 @@ public class DDBoardMain {
 				System.out.println("▨▧ made by daram2");
 				System.out.println("▨▧ whitepearl0926@naver.com");
 				
+				
 			}else if(code == 10) {
+				if(session.equals("YES")){
+					System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
+					System.out.println("▨▧ " + userid + "님 로그아웃 되셨습니다.");
+					session = "NO";
+					userid = "";
+				} else {
+					System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
+					System.out.println("▨▧ 로그인이 필요한 기능입니다.");
+
+				}
+			}else if(code == 11) {
 				System.out.println("▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧▨▧");
 				System.out.println("▨▧ [프로그램 종료]");
 				System.exit(0);
