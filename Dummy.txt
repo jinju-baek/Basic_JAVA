@@ -184,3 +184,49 @@ COMMIT;
 SELECT * FROM tbl_bank;
 
 
+
+
+
+
+-- 편의점 테이블
+DROP TABLE tbl_product;
+
+CREATE TABLE tbl_product(
+    pno NUMBER PRIMARY KEY,
+    pname VARCHAR2(100) NOT NULL UNIQUE,
+    company VARCHAR2(100) NOT NULL,
+    price NUMBER NOT NULL, 
+    cnt NUMBER DEFAULT 0,
+    regdate DATE DEFAULT SYSDATE
+);
+    
+DROP SEQUENCE seq_product;
+
+CREATE SEQUENCE seq_product
+    START WITH 1001
+    INCREMENT BY 1
+    NOCYCLE;
+    
+INSERT INTO tbl_product(pno, pname, company, price)
+VALUES(seq_product.nextVAL, '초콜렛', '허쉬', 1500);
+INSERT INTO tbl_product(pno, pname, company, price)
+VALUES(seq_product.nextVAL, '하리보젤리', '하리보', 2000);
+    
+COMMIT;
+
+SELECT * FROM tbl_product;
+    
+CREATE TABLE tbl_sale(
+    sno NUMBER PRIMARY KEY,
+    sname VARCHAR2(100) NOT NULL,
+    cnt NUMBER NOT NULL,
+    tprice NUMBER NOT NULL,
+    regdate DATE DEFAULT SYSDATE
+);
+
+CREATE SEQUENCE seq_sale
+    START WITH 1
+    INCREMENT BY 1
+    NOCYCLE;
+    
+
