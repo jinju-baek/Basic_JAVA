@@ -16,6 +16,36 @@ public class ProductDAO {
 	List<ProductDTO> list;
 	boolean flag; // default : false
 
+	// 제품 전체 조회(재고 > 1)
+	public List<ProductDTO> selelctUsePdt() {
+		sqlSession = sqlSessionFactory.openSession();
+		try {
+			list = sqlSession.selectList("pdt.selectUsePdt");
+			printPdt(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+		return list;
+	}
+	
+	// 상품 판매시 재고를 마이너스하는 함수
+	public void cntMinusPdt(String pname, int cnt) {
+		sqlSession = sqlSessionFactory.openSession(true);
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("pname", pname);
+			map.put("cnt", cnt);
+			map.put("flag", "minus");
+			sqlSession.update("pdt.cntChange", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
 	// 기존에 등록된 제품인지 최초 입고 제품인지 판별
 	public boolean pdtAlready(String pname) {
 		sqlSession = sqlSessionFactory.openSession();
@@ -39,7 +69,8 @@ public class ProductDAO {
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("pname", pname);
 			map.put("cnt", cnt);
-			result = sqlSession.update("pdt.cntPlus", map);
+			map.put("flag", "plus");
+			result = sqlSession.update("pdt.cntChange", map);
 
 			if (result > 0) {
 				System.out.println("■■ 입고 성공!");
@@ -123,38 +154,18 @@ public class ProductDAO {
 			sqlSession.close();
 		}
 	}
-
-	// 상품 판매
-	public void salePdt(int pno, int cnt) {
-		sqlSession = sqlSessionFactory.openSession();
-		try {
-			HashMap<String, Integer> map = new HashMap<>();
-			map.put("pno", pno);
-			map.put("cnt", cnt);
-			int result = sqlSession.update("pdt.sale", map);
-			if(result > 0) {
-				System.out.println("■■ 판매 성공!");	
-				SaleDAO sDao = new SaleDAO();
-				sDao.recordSale(pno, cnt);
-			}else {
-				System.out.println("■■ 판매 실패. 관리자에게 문의해주세요.");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			sqlSession.close();
-		}
-	}
-
 	
 	// select문 결과 출력
 	public void printPdt(List<ProductDTO> list) {
-		System.out.println("제품번호\t제품명\t제조회사\t가격\t수량\t입고일");
+		int i = 1;
+		System.out.println("번호\t제품번호\t제품명\t제조회사\t가격\t수량\t입고일");
 		for (ProductDTO line : list) {
-			System.out.println(line.getPno() + "\t" + line.getPname() + "\t" + line.getCompany() + "\t"
+			System.out.println(i + "\t" + line.getPno() + "\t" + line.getPname() + "\t" + line.getCompany() + "\t"
 					+ line.getPrice() + "\t" + line.getCnt() + "\t" + line.getRegdate());
+			i++;
 		}
 	}
+
 	
 
 

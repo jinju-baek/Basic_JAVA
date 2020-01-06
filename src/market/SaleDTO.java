@@ -64,8 +64,8 @@ public class SaleDTO {
 
 	@Override
 	public String toString() {
-		return "SaleDTO [sno=" + sno + ", sname=" + sname + ", cnt=" + cnt + ", tprice=" + tprice + ", regdate="
-				+ regdate + "]";
+		return sno + "\t" + sname + "\t" + cnt + "\t" + tprice + "\t"
+				+ regdate;
 	}
 	
 	

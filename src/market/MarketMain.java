@@ -1,5 +1,7 @@
 package market;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class MarketMain {
@@ -11,6 +13,7 @@ public class MarketMain {
 		ProductDAO pDao = new ProductDAO();
 		MarketMain mm = new MarketMain();
 		Boolean flag = false;
+		SaleDAO sDao = new SaleDAO();
 		
 		String userid = "";
 		String userpw = "";
@@ -39,15 +42,42 @@ public class MarketMain {
 			int code = sc.nextInt();
 			
 			if(code == 1) {
-				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-				System.out.println("■■ 구매하실 제품 번호와 수량을 입력해주세요.");
-				System.out.print("■■ 제품 번호 >> ");
-				int pno = sc.nextInt();
-				System.out.print("■■ 구입 수량 >> ");
-				int cnt = sc.nextInt();
-				
-				pDao.salePdt(pno, cnt);
-				
+				while(true) {
+					System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+					System.out.println("■■ 구매하실 제품 번호와 수량을 입력해주세요.");
+					// 현재 등록된 제품중 재고가 1보다 큰 것(즉 수량이 0인 제품을 제외)
+					List<ProductDTO> list = pDao.selelctUsePdt();
+					
+					
+					System.out.print("■■ 제품 번호 >> ");
+					int buyCode = sc.nextInt();
+					
+					// 판매하는 제품명, 수량, 총 가격
+					System.out.print("■■ 구입 수량 >> ");
+					int cnt = sc.nextInt();
+					String sname = list.get(buyCode - 1).getPname();
+					int price = list.get(buyCode - 1).getPrice();
+					int tprice = price * cnt;
+					
+					if(list.get(buyCode - 1).getCnt() >= cnt) {
+						// tbl_sale에 판매한 기록을 저장
+						HashMap<String, Object> map = new HashMap<>();
+						map.put("sname", sname);
+						map.put("cnt", cnt);
+						map.put("tprice", tprice);
+						int result = sDao.insertSale(map);
+						if(result > 0) {
+							pDao.cntMinusPdt(sname, cnt);
+							System.out.println("■■ 판매 성공!");
+						} else {
+							System.out.println("■■ [Msg] 판매 실패. 관리자에게 문의해주세요.");
+						}
+						break;
+					} else {
+						System.out.println("■■ [Msg] 재고가 부족합니다.");
+						continue;
+					}
+				}
 				
 			} else if(code == 2) {
 				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -89,7 +119,7 @@ public class MarketMain {
 				if(pDao.pdtAlready(pname)) {
 					pDao.deletePdt(pname);
 				} else {
-					System.out.println("■■ 기존에 없는 제품입니다. 다시 확인해주세요.");
+					System.out.println("■■ [Msg] 기존에 없는 제품입니다. 다시 확인해주세요.");
 				}
 					
 			} else if(code == 4) {
@@ -107,6 +137,9 @@ public class MarketMain {
 				pDao.searchPdt(keyword);
 				
 			} else if(code == 6) {
+				System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+				System.out.println("■■ 일일 매출 현황입니다.");
+				sDao.dashBoard();
 				
 			} else if(code == 7) {
 				System.out.println("■■ [Msg] Exit the program.");

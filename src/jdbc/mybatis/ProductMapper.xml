@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pdt">
+	<select id="selectUsePdt" resultType="ProductDTO">
+		SELECT * FROM tbl_product
+		WHERE cnt > 0
+		ORDER BY pno
+	</select>
+
 	<select id="already" resultType="Integer">
 		SELECT COUNT(*) FROM tbl_product
 		WHERE pname = #{pname} 
 	</select>
 	
-	<update id="cntPlus" parameterType="map">
+	<update id="cntChange" parameterType="map">
 		UPDATE tbl_product
+		<if test="flag=='plus'">
 		SET cnt = cnt + #{cnt}
+		</if>
+		<if test="flag=='minus'">
+		SET cnt = cnt - #{cnt}
+		</if>
 		WHERE pname = #{pname} 
 	</update>
 	
@@ -22,11 +33,11 @@
 		WHERE pname = #{pname}
 	</delete>
 	
-	<select id="select" resultType="market.ProductDTO">
+	<select id="select" resultType="ProductDTO">
 		SELECT * FROM tbl_product
 	</select>
 	
-	<select id="search" resultType="market.ProductDTO">
+	<select id="search" resultType="ProductDTO">
 		SELECT * FROM tbl_product
 		WHERE pname LIKE '%'||#{pname}||'%'
 	</select>
