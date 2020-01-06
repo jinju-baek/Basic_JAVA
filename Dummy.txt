@@ -228,5 +228,18 @@ CREATE SEQUENCE seq_sale
     START WITH 1
     INCREMENT BY 1
     NOCYCLE;
+   
+--전체 총판매액
+SELECT SUM(tprice) FROM tbl_sale
+WHERE TO_CHAR(regdate, 'YYYYMMDD')=TO_CHAR(SYSDATE, 'YYYYMMDD');
+
+-- 제품별 총판매액
+SELECT sname, SUM(tprice)
+FROM tbl_sale
+GROUP BY sname;
+
+    
+    
+    
     
 
