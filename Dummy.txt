@@ -24,8 +24,6 @@ COMMIT;
 SELECT * FROM tbl_member;
 
 
-
-
 -- 기획사 테이블
 DROP TABLE tbl_enter;
 
@@ -50,7 +48,6 @@ CREATE SEQUENCE seq_enter
     -- MINVALUE 1       -- 최소값
     -- CYCLE/NOCYCLE    -- 반복여부 
     
-
 DESC tbl_enter;
 
 SELECT * FROM tbl_enter;
@@ -69,9 +66,6 @@ VALUES(seq_enter.NEXTVAL, '수영', '가수', 'y', '소녀시대', 9900);
 COMMIT;
 
 SELECT * FROM tbl_enter;
-
-
-
 
 
 -- 서점 관리 테이블
@@ -109,9 +103,6 @@ COMMIT;
 SELECT * FROM tbl_book;
 
 
-
-
-
 -- 게시판 테이블
 DROP TABLE tbl_board;
 
@@ -147,9 +138,6 @@ SELECT * FROM tbl_board;
 COMMIT;
 
 
-
-
-
 -- 은행 테이블
 DROP TABLE tbl_bank;
 
@@ -182,10 +170,6 @@ VALUES(seq_bank.nextVAL, '찡아', '1234');
 COMMIT;
 
 SELECT * FROM tbl_bank;
-
-
-
-
 
 
 -- 편의점 테이블
