@@ -443,7 +443,81 @@ ON e.deptno = d.deptno;
 
 -- Commit과 Rollback
 -- DCL(TCL) : 트랜잭션 제어어
-    
-    
+-- SAVE POINT a
+-- ROOLLBACK TO a;
+
+-- DUAL 테이블 
+--  1. Oracle에서 자체적으로 제공하는 테이블
+--  2. 간단하게 함수를 이용해서 계산 결과값을 확인할 때 사용
+--  3. SYS사용자(신급권한자)가 소유하는 Oracle의 표준 테이블
+--  4. SYS사용자가 소유하지만 어느 사용자든 접근 가능
+--  5. 오직 한 행, 한 컬럼만 담고 있는 dummy 테이블
+-- Dual 테이블 사용 용도
+--  1. 사용자가 함수(계산)를 실행할 때 임시로 사용하는데 적합
+--  2. 함수에 대한 쓰임을 알고싶을 때 특성 테이블 생성없이 dual을 사용하면 return받을 수 있음
+
+-- ex) 현재 시간 출력
+SELECT SYSDATE FROM DUAL;
+
+-- ex) 시퀀스 현재 번호 출력
+SELECT seq_sale.CURRVAL FROM DUAL;
+
+-- ex) 시퀀스 다음 번호 출력
+SELECT seq_sale.NEXTVAL FROM DUAL;
+
+-- Oracle 내장함수
+-- ** 숫자형 함수
+-- 1. ABS 절대값을 반환하는 함수
+SELECT ABS(-1.234) FROM DUAL;
+
+-- 2. CEIL 올림값을 반환하는 함수
+SELECT CEIL(10.1234) FROM DUAL;
+
+-- 3. FLOOR 버림값을 반환하는 함수
+SELECT FLOOR(10.1234) FROM DUAL;
+
+-- 4. MOD 함수 m을 n으로 나눈 나머지 반환, n이 0일 경우 m을 반환
+SELECT MOD(9,4) FROM DUAL;
+
+-- 5. ROUND n값의 반올림을 하는 함수로 m은 소숫점 아래 자릿수를 나타냄
+SELECT ROUND(192.153, 1) FROM DUAL;
+SELECT ROUND(192.153, -1)FROM DUAL;
+
+-- 6. TRUNC n값을 절삭하는 함수 m은 소숫점 아래 자릿수를 나타냄
+SELECT TRUNC(7.5997, 2) FROM DUAL;
+SELECT TRUNC(789.5597, -2) FROM DUAL;
+
+-- ** 문자형 함수
+-- 1. CONTCAT 두 문자를 결합, '||' <= LIKE절
+-- '%' || keyword || '%' => '%keyword%'
+SELECT CONCAT('www.', 'oracle.')||'com' FROM DUAL;
+
+-- 2. INITCAP(char), LOWER(char), UPPER(char)
+-- INITCAP : 주어진 문자열의 첫 번째 문자를 대문자로 변환
+-- LOWER : 주어진 문자열을 소문자로 변환
+-- UPPER : 주어진 문자열을 대문자로 변환
+SELECT INITCAP('oracle') FROM DUAL;
+SELECT LOWER('ORACLE') FROM DUAL;
+SELECT UPPER('oracle') FROM DUAL;
+
+-- 3. LENGTH(char), LENGTHB(char)
+-- 문자열의 길이를 반환
+SELECT LENGTH('오라클자바') len FROM DUAL; -- 결과 : 5(순수 글자수)
+SELECT LENGTHB('오라클자바') len FROM DUAL; -- 결과 : 15(글자 바이트수, 한 글자당 3byte)
+
+-- 4. REPLACE(char1, str1, str2)
+-- 문자열의 특정 문자를 다른 문자로 변환
+SELECT REPLACE('오라클자바', '오라클', '파이썬') FROM DUAL;
+
+-- 5. INSTR(char1, str1, m, n)
+-- 문자열이 포함되어 있는지 조사하여 문자열의 위치를 반환, 문자열이 발견되지 않으면 0이 반환
+-- char1 : 지정문자, str1 : 검색문자, m : 시작위치, n : 검색순위
+SELECT INSTR('CORPORATE FLOOR', 'OK') FROM DUAL;
+SELECT INSTR('CORPORATE FLOOR', 'OR') FROM DUAL;
+SELECT INSTR('CORPORATE FLOOR', 'OR', 3, 2) FROM DUAL;
+
+-- 6. TRIM
+-- 특정한 문자를 제거, 제거할 문자를 입력하지 않으면 기본적으로 공백이 제거
+SELECT TRIM('     오라클 자바') FROM DUAL;
     
 
