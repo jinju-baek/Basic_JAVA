@@ -360,6 +360,9 @@ ON d.deptno = e.deptno;
 -- 3. Natural Join == Equi Join
 -- ex) dept테이블과 emp테이블을 Natural 조인
 -- 동일한 컬럼을 내부적으로 모두 조인, ON절(동등조건)이 생략 가능
+-- Natural과 USING은 같이 사용이 불가능
+-- Natural Join에서 USING절 사용할 경우 Inner Join으로 변경하고 사용해야함
+-- => Natural Join을 Inner Join으로 변경하는 방법은 Natural만 지우면 됨
 SELECT e.empno, e.ename, d.dname
 FROM dept d
 NATURAL JOIN emp e;
