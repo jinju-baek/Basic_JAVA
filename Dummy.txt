@@ -613,3 +613,28 @@ AS
     FROM emp e, dept d
     WHERE e.deptno = d.deptno;
 -- WITH READ ONLY;
+
+
+-- 인덱스
+-- : 테이블내에 원하는 레코드를 빠르게 찾아갈 수 있도록 만들어진 데이터 구조
+-- : 오라클에서는 B-tree를 기반으로 인덱스를 생성함
+
+-- 자동 인덱스 : PK, Unique 속성을 사용할 때 자동으로 생성되는 인덱스
+-- 수동 인덱스 : CREATE INDEX명으로 직접 만든 인덱스
+
+-- ※ 인덱스를 건다고 해서 무조건 성능이 좋아지는건 아님, 역으로 나빠질 수도 있음
+-- 인덱스를 사용하면 좋은 경우
+--  1. WHERE절이나 JOIN조건 안에서 자주 사용되는 컬럼
+--  2. null값이 많이 포함되어 있는 컬럼
+--  3. WHERE 절이나 JOIN 조건에서 자주 사용되는 두 개 이상의 컬럼들
+
+-- 인덱스를 사용하면 안좋은 경우
+--  1. 테이블이 작은 경우(데이터가 적은 경우)
+--  2. 테이블이 자주 갱신되는 경우(값이 insert, update, delete 되는 경우)
+
+-- ex) UNIQUE 인덱스 생성
+CREATE UNIQUE INDEX emp_ename_indx
+ON emp(ename);
+
+-- ex) 인덱스 삭제
+DROP INDEX emp_ename_indx;
