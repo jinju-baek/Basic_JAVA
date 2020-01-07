@@ -521,3 +521,72 @@ SELECT INSTR('CORPORATE FLOOR', 'OR', 3, 2) FROM DUAL;
 SELECT TRIM('     오라클 자바') FROM DUAL;
     
 
+-- 집계함수
+--  1. GROUP BY절을 이용하여 그룹당 하나의 결과로 그룹화 할 수 있다.
+--  2. HAVING절을 사용하여 집계함수를 이용한 조건 비교를 할 수 있다.
+--  3. MIN, MAX 함수는 모든 자료형에 사용할 수 있다.
+
+-- 1. COUNT : 검색된 행의 수를 반환
+SELECT COUNT(deptno) FROM dept;
+
+-- 2. MAX : 최대값 반환
+SELECT MAX(sal) salary FROM emp;
+
+-- 3. MIN : 최소값 반환
+SELECT MIN(sal) salary FROM emp;
+
+-- 4. SUM : 합을 반환
+SELECT SUM(sal) salary
+FROM emp
+WHERE deptno = 30;
+
+-- 5. STDDEV : 표준편차
+SELECT ROUND(STDDEV(sal), 3) salary
+FROM emp
+WHERE deptno = 30;
+
+-- 집계함수 예
+SELECT deptno 부서번호, COUNT (*) 사원수,
+       MAX(sal) 최대급여, MIN(sal) 최소급여,
+       SUM(sal) 급여합계, ROUND(AVG(sal)) 평균급여
+FROM emp
+GROUP BY deptno
+ORDER BY SUM(sal) DESC;
+
+-- SELECT의 GROUP BY절
+--  1. 데이터를 원하는 그룹으로 나눌 수 있음
+--  2. 나누고자 하는 그룹의 컬럼명을 SELECT절과 GROUP BY절 뒤에 추가하면 됨
+--  3. 집계함수와 함께 사용되는 상수(2020년)는 GROUP BY절에 추가하지 않아도 됨
+
+-- ex) 부서별 사원수 조회
+SELECT '2020년' year, deptno 부서번호, COUNT(*) 사원수
+FROM emp
+GROUP BY deptno
+ORDER BY COUNT(*) DESC;
+
+-- ex) 부서별 그룹화하여 부서번호, 인원수, 급여의 평균, 급여의 합
+SELECT deptno 부서번호, COUNT(*) 인원수, ROUND(AVG(sal)) 급여평균, SUM(sal) 급여합계
+FROM emp
+GROUP BY deptno;
+
+
+-- SELECT의 HAVING절
+--  1. WHERE절에서는 집계함수를 사용할 수 없음
+--  2. HAVING절은 집계함수를 가지고 조건비교를 할 때 사용
+--  3. HAVING절은 GROUP BY절과 함께 사용
+
+-- ex) 사원수가 다섯명이 넘는 부사와 사원수를 조회
+SELECT d.dname, COUNT(e.empno) 사원수
+FROM emp e, dept d
+WHERE e.deptno = d.deptno
+GROUP BY dname
+HAVING COUNT(e.empno) >= 5
+ORDER BY dname;
+
+-- 1. FROM : emp전체, dept전체
+-- 2. WHERE : emp테이블의 deptno와 dept테이블의 deptno의 값이 같으면 JOIN(14건)
+-- 3. GROUP BY : JOIN된 14건의 결과에서 dname 컬럼의 값으로 그룹핑(3종류 : ACCOUNTING, RESEARCH, SALES)
+-- 4. HAVING : 그룹핑 된 3건의 결과 중 사원수가 5보다 크거나 같은 2그룹(RESEARCH, SALES)
+-- 5. SELECT : 출력하고 싶은 컬럼 지정(사원이름, 사원수)
+-- 6. ORDER BY : 정렬(dname을 오름차순 정렬 : 알파벳 a, b, c ... 순)
+
